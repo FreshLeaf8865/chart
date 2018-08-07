@@ -3,7 +3,7 @@
 }
 
 .bar-chart-wrap {
-	margin: 20px 60px 0 120px;
+	margin: 20px 60px 0 40px;
 }
 
 .date-wrapper {
@@ -12,7 +12,7 @@
 
 table {
 	margin-top: 40px;
-	margin-left: 43px;
+	margin-left: 40px;
 	border: 1px solid grey;
 	border-spacing: 0;
 	font-size: 14px;

@@ -9,8 +9,13 @@ function getRandomColor() {
 }
 
 var chart = null;
+var currentDate = null;
+var currentTableNumber = null;
 
 function draw_chart(date, tableNumber) {
+	currentDate = date;
+	currentTableNumber = tableNumber;
+
 	if (typeof data[date] == 'undefined') {
 		$("#bar-chart").hide();
 		$(".message").show();
@@ -49,6 +54,13 @@ function draw_chart(date, tableNumber) {
 			title: {
 				display: false,
 				text: 'Status'
+			},
+			scales: {
+				yAxes: [{
+					afterFit: function(scaleInstance) {
+						scaleInstance.width = 100;
+					}
+				}]
 			}
 		}
 	});
@@ -60,7 +72,7 @@ function draw_table(date) {
 		return;
 	}
 
-	var td_width = ($("#bar-chart").width() - 50) / 24;
+	var td_width = ($("#bar-chart").width() - 120.4) / 24 - 1;
 
 	var table = "";
 
@@ -85,28 +97,36 @@ function draw_table(date) {
 	$(".table-wrapper").html(table);
 }
 
+function getToday() {
+	var d = new Date();
+	var month = d.getMonth() + 1;
+	var day = d.getDate();
+	return d.getFullYear() + "-" + (month < 10 ? '0' : '') + month + "-" + (day < 10 ? '0' : '') + day;
+}
+
 $(document).ready(function() {
+
+	currentDate = getToday();
+	currentTableNumber = 0;
 
 	$("#date-picker").datepicker({
 		onSelect: function(selectedDate) {
-			draw_chart(selectedDate, 0);
-			draw_table(selectedDate);
+			currentDate = selectedDate;
+			currentTableNumber = 0;
+			draw_chart(currentDate, currentTableNumber);
+			draw_table(currentDate);
 		},
 		dateFormat: "yy-mm-dd"
 	});
 
 	$("#date-picker").datepicker().datepicker("setDate", "today");
 
-	var d = new Date();
-	var month = d.getMonth() + 1;
-	var day = d.getDate();
-	var today = d.getFullYear() + "-" + (month < 10 ? '0' : '') + month + "-" + (day < 10 ? '0' : '') + day;
+	draw_chart(currentDate, currentTableNumber);
+	draw_table(currentDate);
 
-	draw_chart(today, 0);
-	draw_table(today);
-
-	// $(window).resize(function() {
-	// 	draw_table();
-	// });
+	$(window).resize(function() {
+		draw_chart(currentDate, currentTableNumber);
+		draw_table(currentDate);
+	});
 
 });
